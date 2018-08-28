@@ -1,0 +1,8 @@
+Single node:
+
+	Durations : avg number of s/MB
+	Memory & cpu utilization while executing ... to justify horizontal sharding which balances workload among nodes
+	Peak performance : MB/s
+	Latency : 
+
+Three nodes:
