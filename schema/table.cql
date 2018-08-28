@@ -1,0 +1,51 @@
+/* Cassandra CQL language */
+
+CREATE TABLE IF NOT EXISTS Tweets (
+	tweet_id bigint,
+	id bigint,
+	created_at timestamp,
+	id_str text,
+	text text,
+	source text,
+	truncated boolean,
+	in_reply_to_status_id bigint,
+	in_reply_to_status_id_str text,
+	in_reply_to_user_id bigint,
+	in_reply_to_user_id_str text,
+	in_reply_to_screen_name text,
+	contributors text,
+	is_quote_status boolean,
+	quote_count bigint,
+	reply_count bigint,
+	retweet_count bigint,
+	favorite_count bigint,
+	favorited boolean,
+	retweeted boolean,
+	quoted_status_id bigint,
+	possibly_sensitive boolean,
+	quoted_status_id_str text,
+	filter_level text,
+	lang text,
+	display_text_range list<int>,
+	timestamp_ms bigint,
+
+	geo frozen<geo_tp>,
+	user frozen<users>,
+	entities frozen<entities_tp>,
+	matching_rules frozen<list<matching_rule>>,
+	extended_entities frozen<extended_entities_tp>,
+	place frozen<place_tp>,
+	coordinates frozen<coordinates_tp>,
+
+	quoted_status frozen<Tweet_structure>,
+	retweeted_status frozen<Tweet_structure>,
+
+	current_user_retweet frozen<current_user_retweet_tp>,
+	scopes map<text, boolean>,
+	withheld_copyright boolean,
+	withheld_in_countries list<text>,
+	withheld_scope text,
+	extended_tweet frozen<extended_tweet_tp>,
+	PRIMARY KEY (tweet_id, lang, created_at)
+);
+/*WITH CLUSTERING ORDER BY (created_at DESC) ;*/
