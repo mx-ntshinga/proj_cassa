@@ -1,0 +1,16 @@
+{"updates": [
+	["UPDATE", "tweets", "text", "This is an update new text 1 bla bla bla bla bla bla bla bla bla bla "],
+	["DELETE", "tweets", "lang", "pt"],
+	["UPDATE", "tweets", "text", "This is an update new text 2 bla bla bla bla bla bla bla bla bla bla bla bla "],
+	["DELETE", "tweets", "lang", "de"],
+	["UPDATE", "tweets", "place", "Joburg"],
+	["UPDATE", "tweets", "source", "Android Smartphone. Cape Town"],
+	["UPDATE", "tweets", "text", "This is an update new text 4 bla bla bla bla bla bla 3582 @#$%^# bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla "],
+	["DELETE", "tweets", "lang", "es"],
+	["UPDATE", "tweets", "quoted_status", "original text from abz"],
+	["UPDATE", "tweets", "place", "South Africa"],
+	["DELETE", "tweets", "lang", "it"],
+	["UPDATE", "tweets", "place", "NoWhere"],
+	["UPDATE", "tweets", "quoted_status", "The original text abc"],
+	["DELETE", "tweets", "time_zone", null]
+]}
