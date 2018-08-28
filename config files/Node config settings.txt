@@ -1,0 +1,60 @@
+====================
+NODES:
+====================
+	137.158.59.91
+	137.158.59.83
+	137.158.59.86
+	137.158.59.88
+
+====================
+IP configurations:
+====================
+	multiport dports 27017, 27018, 27019, 27020, 27016
+
+	Node1  137.158.59.91
+	sudo iptables -I INPUT -p tcp -s 137.158.59.83 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 137.158.59.86 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 137.158.59.88 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 196.42.64.219 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+
+	Node2  137.158.59.86
+	sudo iptables -I INPUT -p tcp -s 137.158.59.83 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 137.158.59.88 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 137.158.59.91 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+
+	Node3  137.158.59.83
+	sudo iptables -I INPUT -p tcp -s 137.158.59.86 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 137.158.59.88 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 137.158.59.91 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+
+	Node4  137.158.59.88
+	sudo iptables -I INPUT -p tcp -s 137.158.59.83 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 137.158.59.91 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 137.158.59.86 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+
+	Node3  137.158.59.84
+	sudo iptables -I INPUT -p tcp -s 137.158.59.86 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 137.158.59.88 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 137.158.59.91 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 137.158.59.93 -m multiport --dports 7000,7199,9042 -m state --state NEW,ESTABLISHED -j ACCEPT
+
+========================
+Universal configurations
+========================
+	sudo iptables -I INPUT -p tcp -s 137.158.0.0/16 -m multiport --dports 7000,7199,9042 -m comment --comment 188 allow Cassandra for 2018 Hons proj 1" -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 196.42.66.0/22 -m multiport --dports 7000,7199,9042 -m comment --comment "188 allow Cassandra for 2018 Hons proj 2" -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 192.168.42.0/24 -m multiport --dports 7000,7199,9042 -m comment --comment "188 allow Cassandra for 2018 Hons proj 2" -j ACCEPT
+	sudo iptables -I INPUT -p tcp -s 197.239.181.0/27 -m multiport --dports 7000,7199,9042 -m comment --comment "188 allow Cassandra for 2018 Hons proj 2" -j ACCEPT
+
+-A INPUT -s 197.239.181.0/27 -p tcp -m multiport --dports 7000,7199,9042 -m comment --comment "188 allow Cassandra DB for 2018 Hons proj 3" -j ACCEPT
+
+# These can be saved in a file with the command iptables-save for IPv4.
+sudo iptables-save > /etc/iptables/rules.v4     
+
+# These files can be loaded again with the command iptables-restore for IPv4.
+iptables-restore < /etc/iptables/rules.v4
+
+sudo iptables-save
+sudo iptables -L
+
+

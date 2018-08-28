@@ -1,0 +1,33 @@
+sudo rm -rf /var/lib/cassandra/data/system/*
+sudo rm -rf /var/lib/cassandra/commitlog*
+
+sudo service cassandra stop
+sudo service cassandra start
+
+ps auwx | grep cassandra
+sudo kill 
+
+sudo cassandra -R
+
+nodetool -u cassandra -pw cassandra status
+
+sudo nano cassandra.yaml
+
+service daemon-name stop
+
+pip install cassandra-driver
+
+export CQLSH_NO_BUNDLED=true
+
+
+-----------------
+You are exceeding the tombstone_failure_threshold. It defaults to 100'000. You can either:
+	- Increase the value in the cassandra.yaml or
+	- Clean up your tombstones
+
+To do the latter alter your table and set the gc_grace_seconds to 0:
+	ALTER TABLE component_readings WITH GC_GRACE_SECONDS = 0;
+
+Then trigger a compaction via the nodetool. This will flush out all tombstones.
+
+In your particular scenario of a one-node-cluster you could leave the GC_GRACE_SECONDS at zero. But if you do, keep in mind to undo this if you ever want to use more than one node!

@@ -1,0 +1,39 @@
+
+Issue: message="Batch too large"
+================================
+Changes: 
+	tombstone_failure_threshold: 500000
+	write_request_timeout_in_ms: 10000
+	range_request_timeout_in_ms: 40000 (from  )
+
+	tombstone_warn_threshold:  100000
+	tombstone_failure_threshold:  50000000
+
+	# Log WARN on any batch size exceeding this value. 5kb per batch by default.
+	# Caution should be taken on increasing the size of this threshold as it can lead to node instability.
+	batch_size_warn_threshold_in_kb: 500000
+
+	# Fail any batch exceeding this value. 50kb (10x warn threshold) by default.
+	batch_size_fail_threshold_in_kb: 5000000
+
+	To change:
+		request_timeout_in_ms
+	You may want to increment the request timeout (default: 10 seconds)  
+
+Multiple partition logged batch
+--- use "BEGIN LOGGED BATCH"
+
+For timeout errors:
+	cqlsh --request-timeout=6000
+
+----WARNING!: Queries on secondary indices are restrictive - you can't do range queries for example - you're limited to = checks.
+
+Solution: Connection error: ('Unable to connect to any servers', {'127.0.0.1': ...',)})
+================================
+	pip install cassandra-driver
+	export CQLSH_NO_BUNDLED=true
+1 GB dataset - 47.9165320396 seconds for 44mb batch
+
+native
+
+Heap size: 472.000MiB/3.961GiB
