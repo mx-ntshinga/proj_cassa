@@ -51,15 +51,20 @@ def insertOneIndexed(dataset, session, cassandra_db):
                             if 'retweeted_status' in json_stm and 'quoted_status' in json_stm['retweeted_status']:
                                     json_stm["retweeted_status"]["quoted_status"] = str(json_stm['retweeted_status']['quoted_status'])
 
-                            timestamp_ms =  int(json_stm['timestamp_ms'])
+                            timestamp_ms = int(json_stm['timestamp_ms'])
                             json_stm['created_at']  = datetime.utcfromtimestamp( timestamp_ms//1000).replace(microsecond=timestamp_ms%1000*1000).strftime('20%y-%m-%d %H:%M:%S%z')
                             json_stm['tweet_id'] = lt_count
+                            
+                            for user_e in json_stm['user']:
+                                json_stm ['user_'+user_e] = json_stm['user'][user_e]
+                            del json_stm['user']
 
                             json_stm_ex = json.dumps( json_stm ).replace("'", "`") # Replace sinlge quotes, not supported by cql json insert
 
                             start_time = time.time()
                             session.execute ( "INSERT INTO tweets JSON '" + json_stm_ex + "'" )
                             end_time = time.time()
+                            # session.execute ( "DELETE FROM tweets WHERE tweet_id = " + str(json_stm["tweet_id"]) + "" )                            
 
                         except Exception as exp_t:
                             stm_error = "\nStatement execute error : " + exp_t.__str__() + "\n " + json.dumps(json_stm, indent=4) 
