@@ -1,6 +1,6 @@
 /* Cassandra CQL language */
 
-CREATE TABLE IF NOT EXISTS Tweets (
+CREATE TABLE IF NOT EXISTS Tweets(
 	tweet_id bigint,
 	id bigint,
 	created_at timestamp,
@@ -28,24 +28,68 @@ CREATE TABLE IF NOT EXISTS Tweets (
 	lang text,
 	display_text_range list<int>,
 	timestamp_ms bigint,
-
+	
 	geo frozen<geo_tp>,
-	user frozen<users>,
+	
 	entities frozen<entities_tp>,
 	matching_rules frozen<list<matching_rule>>,
 	extended_entities frozen<extended_entities_tp>,
+	
 	place frozen<place_tp>,
+	
 	coordinates frozen<coordinates_tp>,
-
 	quoted_status frozen<Tweet_structure>,
 	retweeted_status frozen<Tweet_structure>,
-
 	current_user_retweet frozen<current_user_retweet_tp>,
 	scopes map<text, boolean>,
 	withheld_copyright boolean,
 	withheld_in_countries list<text>,
 	withheld_scope text,
+	
 	extended_tweet frozen<extended_tweet_tp>,
-	PRIMARY KEY (tweet_id, lang, created_at)
+	
+	user_id bigint,
+	user_id_str bigint,
+	user_name text,          
+	user_lang text,
+	user_created_at text,
+	user_screen_name text,
+	user_following text,
+	user_followers_count int,
+	user_statuses_count int,
+	user_description text,
+	user_friends_count int,
+	user_location text,
+	user_favourites_count int,
+	user_utc_offset bigint,
+	user_notifications text,
+	user_listed_count int,
+	user_url text,
+	user_connections text,
+	user_follow_request_sent text,
+	user_time_zone text,
+	user_protected boolean,
+	user_translator_type text,
+	user_is_translator boolean,
+	user_geo_enabled boolean,
+	user_default_profile boolean,
+	user_contributors_enabled boolean,
+	user_profile_link_color text,
+	user_profile_image_url text,
+	user_profile_sidebar_fill_color text,
+	user_profile_background_color text,
+	user_profile_text_color text,
+	user_profile_banner_url text,
+	user_profile_background_image_url text,
+	user_profile_background_tile boolean,
+	user_profile_sidebar_border_color text,
+	user_profile_background_image_url_https text,
+	user_default_profile_image boolean,
+	user_profile_image_url_https text,
+	user_profile_use_background_image boolean,
+	user_verified boolean,
+	user_withheld_scope text,
+	PRIMARY KEY (tweet_id, lang, created_at),
 );
+	// user frozen<users>,
 /*WITH CLUSTERING ORDER BY (created_at DESC) ;*/
