@@ -2,33 +2,31 @@
 /* UDT - USER DEFINED TYPES - For nested data structures */
 
 CREATE TYPE IF NOT EXISTS user_mentions_tp (id bigint,id_str text,indices list<int>,screen_name text,name text); 
+
 CREATE TYPE IF NOT EXISTS hashtagz   (indices list<int>,text text);
+
 CREATE TYPE IF NOT EXISTS sizes_tp   (w  int,h  int,resize  text);
+
 CREATE TYPE IF NOT EXISTS options_tp (position int,text text);
+
 CREATE TYPE IF NOT EXISTS polls_tp   (end_datetime text,duration_minutes int,options list<frozen<options_tp>>);
+
 CREATE TYPE IF NOT EXISTS add_media_info_tp (title text,description text,embeddable boolean,monetizable boolean);
+
 CREATE TYPE IF NOT EXISTS variant_tp     (url text, bitrate bigint, content_type text);
+
 CREATE TYPE IF NOT EXISTS video_info_tp (aspect_ratio list<int>, duration_millis int, variants frozen<list<variant_tp>>);
-CREATE TYPE IF NOT EXISTS media_tp (
-    id bigint,
-    id_str text,
-    indices list<int>,
-    media_url text,
-    media_url_https text, 
-    display_url text,
-    expanded_url  text,
-    type text,
-    sizes map <text, frozen<sizes_tp>>,
-    source_status_id bigint,
-    source_user_id bigint,
-    source_status_id_str text, 
-    url text,
-    additional_media_info frozen<add_media_info_tp>,
-    source_user_id_str text,
-    video_info frozen<video_info_tp>,
-    description text
+
+CREATE TYPE IF NOT EXISTS media_tp 
+(
+    id bigint, id_str text, indices list<int>, media_url text, media_url_https text, 
+    display_url text, expanded_url  text, type text, sizes map <text, frozen<sizes_tp>>,
+    source_status_id bigint, source_user_id bigint, source_status_id_str text,  url text,
+    source_user_id_str text, additional_media_info frozen<add_media_info_tp>,
+    video_info frozen<video_info_tp>, description text
 );
 CREATE TYPE IF NOT EXISTS symbols_tp (indices list<int>, text text);
+
 CREATE TYPE IF NOT EXISTS entities_tp (
     symbols frozen<list<symbols_tp>>,
     media frozen<list<media_tp>>,
@@ -38,16 +36,23 @@ CREATE TYPE IF NOT EXISTS entities_tp (
     user_mentions frozen<list<user_mentions_tp>>
 );
 CREATE TYPE IF NOT EXISTS coordinates_tp (coordinates frozen<list<float>>, type text,);
+
 CREATE TYPE IF NOT EXISTS coordinates_tp2 (coordinates frozen<list<list<list<float>>>>, type text);
+
 CREATE TYPE IF NOT EXISTS place_tp (
    	id text, url text, name text, country text, full_name text, place_type text,
    	country_code text, attributes map<text,text>, bounding_box frozen<coordinates_tp2>
 );
 CREATE TYPE IF NOT EXISTS extended_entities_tp (media frozen<list<media_tp>>);
+
 CREATE TYPE IF NOT EXISTS matching_rule (tag text, id bigint, id_str text);
+
 CREATE TYPE IF NOT EXISTS current_user_retweet_tp (id bigint, id_str text);
+
 CREATE TYPE IF NOT EXISTS extended_tweet_tp (full_text text, display_text_range list<int>, entities frozen<entities_tp>, extended_entities frozen<entities_tp>);
+
 CREATE TYPE IF NOT EXISTS geo_tp (type text, coordinates frozen<list<float>>);
+
 CREATE TYPE IF NOT EXISTS users (
     id bigint,              verified boolean,   follow_request_sent text,   
     followers_count int,    id_str bigint, 	 listed_count int, 	          utc_offset bigint,
@@ -61,6 +66,7 @@ CREATE TYPE IF NOT EXISTS users (
     contributors_enabled boolean,  profile_sidebar_border_color text,   profile_background_image_url_https text,
     default_profile_image boolean, profile_image_url_https text, profile_use_background_image boolean
 );
+
 CREATE TYPE IF NOT EXISTS Tweet_structure (
     created_at text,
     id bigint,
@@ -70,7 +76,6 @@ CREATE TYPE IF NOT EXISTS Tweet_structure (
     lang text, 
     source text,
     geo frozen<geo_tp>,
-    user frozen<users>,
     timestamp_ms bigint,
     truncated boolean,
     contributors text,
@@ -104,4 +109,5 @@ CREATE TYPE IF NOT EXISTS Tweet_structure (
     withheld_scope text,
     extended_tweet frozen<extended_tweet_tp>,
     quoted_status text,
+    user frozen<users>,
 );
