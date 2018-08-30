@@ -46,6 +46,10 @@ def bulk_inserts(dataset, session, cassandra_db, iterations):
                         jsn_atweet['created_at'] = datetime_x
                         jsn_atweet['tweet_id'] = bulk_count+1
 
+                        for user_e in jsn_atweet['user']:
+                            jsn_atweet ['user_'+user_e] = jsn_atweet['user'][user_e]
+                        del jsn_atweet['user']
+
                         json_stm = json.dumps( jsn_atweet ).replace("'", "`") # Replace single quotes, not supported by cql json insert
 
                         buffer_size += (float(sys.getsizeof( json_stm )) / 1000000.0)
