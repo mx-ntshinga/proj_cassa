@@ -178,16 +178,16 @@ def main():
                 insertOneIndexed (dataset = "dataset/single.json", session=session, cassandra_db=cassandra_db,  iterations=20)
             # INSERT ONE
             elif option == "2":
-                insertOne (dataset = "dataset/single.json", session=session, cassandra_db=cassandra_db,  iterations=20)
+                insertOne (dataset = "dataset/single.json", session=session, cassandra_db=cassandra_db,  iterations=2)
             # SCANNING
             elif option == "3":
-                scanAll (session, iterations=20)
+                scanAll (session, iterations=1)
             # FIND BY INDEX
             elif option == "5":
-                indexFind(session, iterations=20)
+                indexFind(session, iterations=1, jsn_dataset = "unknwown")
             # INSERT ONE INDEXED
             elif option.upper() == "6":
-                insertOneIndexed(dataset = "dataset/single.json", session=session, cassandra_db=cassandra_db,  iterations=20)
+                insertOneIndexed(dataset = "unknwown", session=session, cassandra_db=cassandra_db,  iterations=1)
             # RUN ALL SIMULATANEOUSLY
             elif option == "7":
                 # print("All four (write, update, delete) CRUD operations running synchronized.")
