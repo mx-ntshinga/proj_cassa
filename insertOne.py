@@ -78,6 +78,7 @@ def insertOne(dataset, session, cassandra_db, iterations):
 
                 iter_durations.append( duration )
                 iterations -= 1
+                session.execute ( "DELETE FROM tweets WHERE tweet_id = " + str(json_stm["tweet_id"]) + "" )
 
             print("%i iterations: %s " % (iterations, str(iter_durations)) )
             avg = sum (iter_durations) / float( max(len(iter_durations), 1) )
