@@ -20,7 +20,7 @@ def bulk_inserts(dataset, session, cassandra_db, iterations):
             
             jsonDataset = jsonDataset_f.readlines()
 
-            batch_size = 15.0   # from 23 to 48 for faster batching
+            batch_size = 40.0   # from 23 to 48 for faster batching
             print("\n===============================\nBulkLoad: Tweets from '%s' dataset " % dataset + " >> to >> '%s' Column-family of Cassandra db.\n" % cassandra_db )
             print("  Dataset size = %f MB \n" % (float(os.stat(dataset).st_size)/1000000.0) ) 
             print("  Batch size : %d MB "% batch_size )

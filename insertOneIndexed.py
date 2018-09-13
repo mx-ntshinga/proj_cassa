@@ -11,20 +11,18 @@ from cassandra.cluster import Cluster
 from cassandra import ConsistencyLevel 
 from cassandra.query import Statement
 
-def insertOneIndexed(dataset, session, cassandra_db): 
+def insertOneIndexed(dataset, session, cassandra_db, iterations): 
     print("===============================\nInsertOne (Indexed with (created_at, lang)): Tweet from '%s' dataset " % dataset + " >> to >> '%s' Column-family of Cassandra db.\n" % cassandra_db )
     print("  Dataset size = %f MB \n" % (float(os.stat(dataset).st_size)/1000000.0) ) 
 
-    date_index = "CREATE INDEX IF NOT EXISTS date_index ON tweets (created_at);"
     lang_index = "CREATE INDEX IF NOT EXISTS lang_index ON tweets (lang);"
-    followers_index = "CREATE INDEX IF NOT EXISTS followers_count ON tweets (user.followers_count);"
-    location_index = "CREATE INDEX IF NOT EXISTS location ON tweets (user.location);"
-    friends_index = "CREATE INDEX IF NOT EXISTS friends_count ON tweets (user.friends_count);"
+    followers_index = "CREATE INDEX IF NOT EXISTS followers_count ON tweets (user_followers_count);"
+    location_index = "CREATE INDEX IF NOT EXISTS location ON tweets (user_location);"
+    friends_index = "CREATE INDEX IF NOT EXISTS friends_count ON tweets (user_friends_count);"
 
     Statement.ConsistencyLevel = ConsistencyLevel.ALL  # more than one response ) to ensure all replicas are aware of this query, and no data is missing when querying coordinator.
 
-    session.execute(date_index) 
-    session.execute(lang_stm)
+    session.execute(lang_index)
     session.execute(location_index)
     session.execute(followers_index)
     session.execute(friends_index)
@@ -37,6 +35,8 @@ def insertOneIndexed(dataset, session, cassandra_db):
 
             while iterations>0: 
                 duration = 0.0
+                lt_count = 0 
+                total_size = 0.0
                 print("\nIteration: ",iterations)
                 for a_tweet in jsonDataset:
                     try:
@@ -90,7 +90,7 @@ def insertOneIndexed(dataset, session, cassandra_db):
 
                 iter_durations.append( duration )
                 iterations -= 1 
-                session.execute ( "DELETE FROM tweets WHERE tweet_id = " + json_stm["tweet_id"] + "" )
+                session.execute ( "DELETE FROM tweets WHERE tweet_id = " + str(json_stm["tweet_id"]) + "" )
 
             print("%i iterations: %s " % (iterations, str(iter_durations)) )
             avg = sum (iter_durations) / float( max(len(iter_durations), 1) )
@@ -101,7 +101,6 @@ def insertOneIndexed(dataset, session, cassandra_db):
     except Exception as except_inst:
         print("\nDataset Insert error : " + except_inst.__str__())
 
-    session.execute('DROP INDEX IF EXISTS date_index;')
     session.execute('DROP INDEX IF EXISTS lang_index;')
     session.execute('DROP INDEX IF EXISTS location;')
     session.execute('DROP INDEX IF EXISTS followers_count;')
