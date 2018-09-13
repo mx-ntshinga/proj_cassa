@@ -30,7 +30,7 @@ def scanAll(session, iterations, jsn_dataset):
             # session.execute ("--request-timeout=6000;")
             next_range = 0l
             curr_range = -9223372036854775808
-            step =        100000000000000000
+            step = 100000000000000000
             limit = 9223372036854775808
 
             results_len = 0
@@ -45,9 +45,10 @@ def scanAll(session, iterations, jsn_dataset):
                     next_range = limit-1
                 statement_str = "SELECT token(tweet_id) FROM tweets WHERE token(tweet_id) >= %i AND token(tweet_id) < %i ; " % (curr_range, next_range)
                 start = time.time()
-                results = session.execute ( statement_str ) 
-                duration = time.time() - start   # record event time 
-                results_len += len( results.current_rows ) 
+                results = session.execute_async ( statement_str ) 
+                results_len += len(list(results.result())) 
+                duration = time.time() - start   # record event time x
+
                 curr_range += step
 
             print("  Scanned Rows [ %i ] .... \r" % (results_len) )
@@ -64,6 +65,5 @@ def scanAll(session, iterations, jsn_dataset):
 
     except Exception as error:
         print(error.__str__())
-        errors += 1 
     except KeyboardInterrupt as keyb:
         print("\n\nOperation cancelled!")

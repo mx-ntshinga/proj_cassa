@@ -20,16 +20,16 @@ def bulk_inserts(dataset, session, cassandra_db, iterations):
             
             jsonDataset = jsonDataset_f.readlines()
 
-            batch_size = 43.0   # from 23 to 48 for faster batching
+            batch_size = 15.0   # from 23 to 48 for faster batching
             print("\n===============================\nBulkLoad: Tweets from '%s' dataset " % dataset + " >> to >> '%s' Column-family of Cassandra db.\n" % cassandra_db )
             print("  Dataset size = %f MB \n" % (float(os.stat(dataset).st_size)/1000000.0) ) 
             print("  Batch size : %d MB "% batch_size )
 
             iter_durations = []
 
-            while iterations>0:
+            while iterations > 0:
                 duration, bulk_count, buffer_size, total_size = 0.0,  0,  0.0,  0.0
-                batch = BatchStatement()  #QUORUM)  # = BatchStatement(consistency_level = ConsistencyLevel.ONE)  #QUORUM)
+                batch = BatchStatement(consistency_level = ConsistencyLevel.ONE)  #QUORUM)
 
                 print("\nIteration: ",iterations)
                 for a_tweet in jsonDataset:
@@ -63,10 +63,12 @@ def bulk_inserts(dataset, session, cassandra_db, iterations):
                         if int(buffer_size) == int(batch_size):
                             try:
                                 start_time = time.time()
-                                session.execute ( batch )
+                                results = session.execute_async ( batch )
+                                rows = list(results.result())
                                 duration += time.time()-start_time
-                                batch = BatchStatement()  # = BatchStatement(consistency_level=ConsistencyLevel.ONE)
+                                batch = BatchStatement(consistency_level=ConsistencyLevel.ONE)
                                 buffer_size = 0.0
+
                             except Exception as exp_t: 
                                 print("execute error : " + exp_t.__str__() + "\n " + json.dumps(jsn_atweet, indent=4))
                                 break
@@ -78,8 +80,11 @@ def bulk_inserts(dataset, session, cassandra_db, iterations):
                         break
 
                 # execute remaining statements in batch
+                # rows = list(results.result())
+
                 start_time = time.time()
-                session.execute ( batch )
+                results = session.execute_async ( batch )
+                rows = list(results.result())
                 duration += time.time()-start_time
                 print("  Insert Tweet [%i] t-size [%f MB] ...  \r" % (bulk_count, total_size) )
                 print("  Elapsed time : ", duration)
@@ -87,8 +92,8 @@ def bulk_inserts(dataset, session, cassandra_db, iterations):
                 iter_durations.append( duration )
                 iterations -= 1
                 
-                if not iterations == 0:
-                    session.execute("TRUNCATE TABLE tweets;")
+                # if not iterations == 0:
+                #     session.execute("TRUNCATE TABLE tweets;")
 
             avg = sum(iter_durations) / float( max(len(iter_durations), 1))
             with open("results/iterations.json","a+") as bulk_f:

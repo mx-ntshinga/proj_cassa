@@ -56,9 +56,9 @@ def keyscapeSetup(tweets_db):
     """
 
     # Default
-    factor = "1"
-    location = ['127.0.0.1']
-    # location = ['137.158.59.88']
+    factor = "3"
+    # location = ['127.0.0.1']
+    location = ['137.158.59.88','137.158.59.83','137.158.59.86']
     portNumber = 9042
     nodes = factor
 
@@ -76,7 +76,7 @@ def keyscapeSetup(tweets_db):
             session = cluster.connect(tweets_db)
             # ser_lookup_stmt.consistency_level = ConsistencyLevel.
             print ("\n... Connected to cluster!\n")
-            options = optionsKeyspace(session, tweets_db, strategy="SimpleStrategy", replic=factor )
+            # options = optionsKeyspace(session, tweets_db, strategy="SimpleStrategy", replic=factor )
             return [session, cluster]
 
         except Exception as exp:
@@ -158,7 +158,7 @@ def main():
 
         if not option.upper() == "Q":
             option =  raw_input("\nSelect option : ")
-            datasets = ["dataset/e3-5MB.json", "dataset/e3-50MB.json", "dataset/e3-100MB.json", "dataset/e3-500MB.json", "dataset/e10-1GB.json"]
+            # datasets = ["dataset/e3-5MB.json", "dataset/e3-50MB.json", "dataset/e3-100MB.json", "dataset/e3-500MB.json", "dataset/e10-1GB.json"]
 
             if len(sys.argv)>1:
                 # BULK INSERTS
@@ -167,6 +167,8 @@ def main():
 
             # AUTOMATE TESTING
             if option == "1":  # Automated iteration tests
+                # datasets = ["dataset/e10-1GB.json"]
+                # datasets = ["dataset/e3-100MB.json", "dataset/e3-500MB.json", "dataset/e10-1GB.json"]
                 datasets = ["dataset/e3-5MB.json", "dataset/e3-50MB.json", "dataset/e3-100MB.json", "dataset/e3-500MB.json", "dataset/e10-1GB.json"]
                 tweets_limit = 1000000
 
@@ -181,7 +183,7 @@ def main():
                 insertOne (dataset = "dataset/single.json", session=session, cassandra_db=cassandra_db,  iterations=2)
             # SCANNING
             elif option == "3":
-                scanAll (session, iterations=1)
+                scanAll (session, iterations=20, jsn_dataset=jsn_dataset)
             # FIND BY INDEX
             elif option == "5":
                 indexFind(session, iterations=1, jsn_dataset = "unknwown")

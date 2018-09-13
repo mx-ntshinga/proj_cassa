@@ -21,15 +21,15 @@ def indexFind(session, iterations, jsn_dataset):
         # Statement.ConsistencyLevel = ConsistencyLevel.ALL  # more than one response ) to ensure no data is missing from querying replicas
 
         # session.execute(lang_index)
-        session.execute(date_index) 
-        session.execute(location_index)
-        session.execute(followers_index)
-        session.execute(friends_index)
+        session.execute_async(date_index) 
+        session.execute_async(location_index)
+        session.execute_async(followers_index)
+        session.execute_async(friends_index)
 
-        find_withIndex1 = "SELECT count(tweet_id) from tweets WHERE lang = 'en' and token(tweet_id) >= -9223372036854775808 ALLOW FILTERING;"
-        find_withIndex2 = "SELECT count(user_location) from tweets WHERE user_location= 'London' and token(tweet_id) >= -9223372036854775808 ALLOW FILTERING;"
-        find_withIndex3 = "SELECT count(user_followers_count) from tweets WHERE user_followers_count >= 1000 and token(tweet_id) >= -9223372036854775808 ALLOW FILTERING;"
-        find_withIndex4 = "SELECT count(user_friends_count) from tweets WHERE user_friends_count >= 1000 and token(tweet_id) >= -9223372036854775808 ALLOW FILTERING;"
+        find_withIndex1 = "SELECT tweet_id from tweets WHERE lang = 'en' and token(tweet_id) >= -9223372036854775808 ALLOW FILTERING;"
+        find_withIndex2 = "SELECT user_location from tweets WHERE user_location= 'London' and token(tweet_id) >= -9223372036854775808 ALLOW FILTERING;"
+        find_withIndex3 = "SELECT user_followers_count from tweets WHERE user_followers_count >= 1000 and token(tweet_id) >= -9223372036854775808 ALLOW FILTERING;"
+        find_withIndex4 = "SELECT user_friends_count from tweets WHERE user_friends_count >= 1000 and token(tweet_id) >= -9223372036854775808 ALLOW FILTERING;"
 
         # find_withIndex = "SELECT count(tweet_id) WHERE lang = 'en' AND user.location = 'London' \
         #               AND user.followers_count>=1000 AND user.friends_count>=1000 and created_at < toTimestamp(now()) ALLOW FILTERING;"  # LIMIT 1000000000"
@@ -44,22 +44,27 @@ def indexFind(session, iterations, jsn_dataset):
             try:
                 # lang = en and friends_count > 100 and followers > 100 
                 start1 = time.time()
-                rows_returned1 = session.execute(find_withIndex1)
+                result_1 = session.execute_async (find_withIndex1)
+                r1 = len(list(result_1.result()))
                 duration = time.time() - start1
 
                 start2 = time.time()
-                rows_returned2 = session.execute(find_withIndex2)
+                result_1 = session.execute_async (find_withIndex2)
+                rows_2 = len(list(result_2.result()))
                 duration = time.time() - start2
 
                 start3 = time.time()
-                rows_returned3 = session.execute(find_withIndex3)
+                result_1 = session.execute_async (find_withIndex3)
+                rows_3 = len(list(result_3.result()))
                 duration = time.time() - start3
 
                 start4 = time.time()
-                rows_returned4 = session.execute(find_withIndex4)
+                result_4 = session.execute_async (find_withIndex4)
+                rows_4 = len(list(result_4.result()))
                 duration += time.time() - start4
 
-                rows = len(rows_returned1.current_rows)+len(rows_returned2.current_rows)+len(rows_returned3.current_rows)+len(rows_returned4.current_rows)
+                # rows = len(rows_returned1.current_rows)+len(rows_returned2.current_rows)+len(rows_returned3.current_rows)+len(rows_returned4.current_rows)
+                rows = rows_1 + rows_2 + rows_3 + rows_4
 
             except Exception as error:
                 print("\nSELECT stm error : " + error.__str__())
@@ -81,10 +86,10 @@ def indexFind(session, iterations, jsn_dataset):
 
     try:
         # session.execute("DROP INDEX IF EXISTS lang_index;")
-        session.execute("DROP INDEX IF EXISTS date_index;")
-        session.execute("DROP INDEX IF EXISTS location_index;")
-        session.execute("DROP INDEX IF EXISTS followers_count;")
-        session.execute("DROP INDEX IF EXISTS friends_count;")
+        session.execute_async("DROP INDEX IF EXISTS date_index;")
+        session.execute_async("DROP INDEX IF EXISTS location_index;")
+        session.execute_async("DROP INDEX IF EXISTS followers_count;")
+        session.execute_async("DROP INDEX IF EXISTS friends_count;")
     except Exception as error:
         print("\nDROP INDEX stm error : " + error.__str__())
 
