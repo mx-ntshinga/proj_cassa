@@ -92,8 +92,8 @@ def bulk_inserts(dataset, session, cassandra_db, iterations):
                 iter_durations.append( duration )
                 iterations -= 1
                 
-                # if not iterations == 0:
-                #     session.execute("TRUNCATE TABLE tweets;")
+                if not iterations == 0:
+                    session.execute("TRUNCATE TABLE tweets;")
 
             avg = sum(iter_durations) / float( max(len(iter_durations), 1))
             with open("results/iterations.json","a+") as bulk_f:
