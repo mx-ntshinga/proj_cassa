@@ -56,9 +56,10 @@ def keyscapeSetup(tweets_db):
     """
 
     # Default
-    factor = "3"
+    factor = "1"
     # location = ['127.0.0.1']
-    location = ['137.158.59.88','137.158.59.83','137.158.59.86']
+    location = ['137.158.59.83']
+    # location = ['137.158.59.88','137.158.59.83','137.158.59.86']
     portNumber = 9042
     nodes = factor
 
@@ -140,8 +141,8 @@ def main():
 
 
     print("\nOptions: Database performance measurements:\n===========================================")
-    print(" 1: Automatic Testing of '2,3,4,5,6' \n 2: Insert One \n 3: ScanAll \n 4: BulkLoad Insert \
-         \n 5: IndexFind \n 6: InsertOne Indexed \n 7: Run 'Write + Scan + Update' simultaneously (Simulate live busy DB) \n q: Quit")
+    print(" 1: Automatic Testing of (1. BulkLoad Insert, 2. ScanAll, 3. IndexFind, 4. Insert One, 5. InsertOne Indexed) \
+         \n 2: Run 'Write + Scan + Update' simultaneously (Simulate live busy DB) \n q: Quit")
 
     option = ""
     try:
@@ -178,20 +179,8 @@ def main():
                     indexFind (session, iterations=20, jsn_dataset=jsn_dataset)
                 insertOne (dataset = "dataset/single.json", session=session, cassandra_db=cassandra_db,  iterations=20)                
                 insertOneIndexed (dataset = "dataset/single.json", session=session, cassandra_db=cassandra_db,  iterations=20)
-            # INSERT ONE
-            elif option == "2":
-                insertOne (dataset = "dataset/single.json", session=session, cassandra_db=cassandra_db,  iterations=2)
-            # SCANNING
-            elif option == "3":
-                scanAll (session, iterations=20, jsn_dataset=jsn_dataset)
-            # FIND BY INDEX
-            elif option == "5":
-                indexFind(session, iterations=1, jsn_dataset = "unknwown")
-            # INSERT ONE INDEXED
-            elif option.upper() == "6":
-                insertOneIndexed(dataset = "unknwown", session=session, cassandra_db=cassandra_db,  iterations=1)
             # RUN ALL SIMULATANEOUSLY
-            elif option == "7":
+            elif option == "2":
                 # print("All four (write, update, delete) CRUD operations running synchronized.")
                 print("Multiple 'n' Threads for all CRUD operations running concurrently.***")
                 dur = run_simulation()
@@ -203,9 +192,7 @@ def main():
                 exit()
 
     except KeyboardInterrupt as keyb:
-        print("\n\nOperation cancelled!")
-        session.execute('DROP INDEX IF EXISTS date_index;')
-        session.execute('DROP INDEX IF EXISTS lang_index;')
+        print("\n\nOperation cancelled!") 
 
     except Exception as error:
         print("\n" + error.__str__())
